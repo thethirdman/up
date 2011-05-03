@@ -1,0 +1,28 @@
+qotd - Quote of the Day Server Implementation
+=============================================
+qotd is an implementation of the rfc 865.
+
+Requirements
+------------
+You need a sane operating system to be able to build qotd.
+
+Installation
+------------
+Edit config.mk to match your local setup and run `make clean install`
+
+Running qotd
+------------
+You must pass the command to be executed by qotd to renew the quote in argument
+of the program.
+
+	$ qotd fortune
+
+For example to have on fortume a day.
+
+Configuration
+-------------
+
+The configuration of qotd can be done inside config.mk in order to change the
+renewal time of the quotes.
+
+# vim:ft=markdown
