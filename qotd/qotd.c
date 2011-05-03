@@ -27,7 +27,7 @@ static int write_all(int sock, const char* msg, size_t nb)
 {
 	int wr;
 
-	for (int nb_sent = 0; nb_sent < nb; nb_sent += wr) {
+	for (size_t nb_sent = 0; nb_sent < nb; nb_sent += wr) {
 		wr = write(sock, msg + nb_sent, nb - nb_sent);
 		if (wr == -1) {
 			warn("write()");
