@@ -1,0 +1,4 @@
+config.mk
+config.h
+*.o
+qotd
