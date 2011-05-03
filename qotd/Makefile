@@ -17,14 +17,11 @@ options:
 config.mk:
 	cp config.def.mk config.mk
 
-config.h:
-	cp config.def.h config.h
-
 .c.o:
 	@echo CC $<
 	@${CC} -c ${CFLAGS} $<
 
-${OBJ}: config.h config.mk
+${OBJ}: config.mk
 
 qotd: ${OBJ}
 	@echo CC -o $@
@@ -37,7 +34,7 @@ clean:
 dist: clean
 	@echo creating dist tarball
 	@mkdir -p qtd-${VERSION}
-	@cp -R LICENSE Makefile README config.def.mk config.def.h qotd.1 ${SRC} st-${VERSION}
+	@cp -R LICENSE Makefile README config.def.mk qotd.1 ${SRC} qotd-${VERSION}
 	@tar -cf qotd-${VERSION}.tar qotd-${VERSION}
 	@gzip qotd-${VERSION}.tar
 	@rm -rf qotd-${VERSION}
@@ -46,7 +43,7 @@ install: all
 	@echo installing executable file to ${DESTDIR}${PREFIX}/bin
 	@mkdir -p ${DESTDIR}${PREFIX}/bin
 	@cp -f st ${DESTDIR}${PREFIX}/bin
-	@chmod 755 ${DESTDIR}${PREFIX}/bin/st
+	@chmod 755 ${DESTDIR}${PREFIX}/bin/qotd
 	@echo installing manual page to ${DESTDIR}${MANPREFIX}/man1
 	@mkdir -p ${DESTDIR}${MANPREFIX}/man1
 	@sed "s/VERSION/${VERSION}/g" < qotd.1 > ${DESTDIR}${MANPREFIX}/man1/qotd.1
