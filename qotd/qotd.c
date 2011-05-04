@@ -16,14 +16,25 @@
 #define PERIOD_RENEWAL	(24 * 3600)
 #endif
 
-static void usage(void)
+static char *cmd = NULL;
+static char actual_msg[513];
+
+static void	usage(void);
+static int	write_all(int, const char *, size_t);
+static int	new_msg(void);
+static int	update_msg(void);
+
+static void
+usage(void)
 {
 	extern const char* __progname;
+
 	printf("usage: %s cmd\n", __progname);
 	exit(EXIT_FAILURE);
 }
 
-static int write_all(int sock, const char* msg, size_t nb)
+static int
+write_all(int sock, const char* msg, size_t nb)
 {
 	int wr;
 
@@ -38,17 +49,15 @@ static int write_all(int sock, const char* msg, size_t nb)
 	return 0;
 }
 
-static char *cmd = NULL;
-static char actual_msg[513];
-
-static int new_msg(void)
+static int
+new_msg(void)
 {
+	FILE* cmd_output;
+
 	if (cmd == NULL)
 		return 0;
 
-	FILE* cmd_output = popen(cmd, "r");
-
-	if (cmd_output == NULL) {
+	if ((cmd_output = popen(cmd, "r")) == NULL) {
 		warn("popen()");
 		return 0;
 	}
@@ -75,7 +84,8 @@ static int new_msg(void)
 	return 1;
 }
 
-static int generate_msg(void)
+static int
+update_msg(void)
 {
 	static time_t yesterday = 0;
 
@@ -83,8 +93,6 @@ static int generate_msg(void)
 
 	if (yesterday == 0)
 		yesterday = today;
-
-	today = time(NULL) / PERIOD_RENEWAL;
 
 	if (today != yesterday || actual_msg[0] == '\0') {
 		yesterday = today;
@@ -95,7 +103,8 @@ static int generate_msg(void)
 	return 0;
 }
 
-int main(int argc, char **argv)
+int
+main(int argc, char **argv)
 {
 	int sock;
 	struct sockaddr_in addr;
@@ -123,7 +132,7 @@ int main(int argc, char **argv)
 		if (client_sock == -1)
 			err(EXIT_FAILURE, "accept()");
 
-		generate_msg();
+		update_msg();
 		write_all(client_sock, actual_msg, strlen(actual_msg));
 
 		if (close(client_sock) == -1)
