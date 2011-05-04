@@ -34,10 +34,11 @@
 #include <time.h>
 #include <unistd.h>
 
+#include <sys/types.h>
 #include <sys/socket.h>
 
-#include <arpa/inet.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 
 #define QOTD_PORT	17
 
