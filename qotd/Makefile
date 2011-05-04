@@ -1,7 +1,7 @@
 # qotd - quote of the day server
 # See LICENSE file for copyright and license details.
 
--include config.mk
+include config.mk
 
 SRC = qotd.c
 OBJ = ${SRC:.c=.o}
@@ -42,7 +42,7 @@ dist: clean
 install: all
 	@echo installing executable file to ${DESTDIR}${PREFIX}/bin
 	@mkdir -p ${DESTDIR}${PREFIX}/bin
-	@cp -f st ${DESTDIR}${PREFIX}/bin
+	@cp -f qotd ${DESTDIR}${PREFIX}/bin
 	@chmod 755 ${DESTDIR}${PREFIX}/bin/qotd
 	@echo installing manual page to ${DESTDIR}${MANPREFIX}/man1
 	@mkdir -p ${DESTDIR}${MANPREFIX}/man1

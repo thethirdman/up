@@ -33,9 +33,11 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#include <fcntl.h>
 
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/stat.h>
 
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -133,6 +135,39 @@ update_msg(void)
 	return 0;
 }
 
+static int
+do_fork()
+{
+	switch (fork())
+	{
+		case 0:
+			return 1;
+		case -1:
+			warn("fork()");
+			return 1;
+		default:
+			exit(0);
+	}
+}
+
+void
+daemonize()
+{
+	do_fork();
+	setsid();
+	do_fork();
+	umask(0);
+	chdir("/");
+
+	close(0);
+	close(1);
+	close(2);
+
+	open("/dev/null", O_RDWR);
+	dup(0);
+	dup(0);
+}
+
 int
 main(int argc, char **argv)
 {
@@ -143,6 +178,8 @@ main(int argc, char **argv)
 		usage();
 
 	cmd = argv[1];
+
+	daemonize();
 
 	if ((sock = socket(AF_INET, SOCK_STREAM, 0)) == -1)
 		err(EXIT_FAILURE, "socket()");
