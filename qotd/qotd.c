@@ -10,7 +10,7 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 
-#define QOTD_PORT	1700
+#define QOTD_PORT	17
 
 #ifndef PERIOD_RENEWAL
 #define PERIOD_RENEWAL	(24 * 3600)
@@ -79,11 +79,15 @@ static int generate_msg(void)
 {
 	static time_t yesterday = 0;
 
-	if (yesterday == 0)
-		yesterday = time(NULL) / PERIOD_RENEWAL;
 	time_t today = time(NULL) / PERIOD_RENEWAL;
 
+	if (yesterday == 0)
+		yesterday = today;
+
+	today = time(NULL) / PERIOD_RENEWAL;
+
 	if (today != yesterday || actual_msg[0] == '\0') {
+		yesterday = today;
 		new_msg();
 		return 1;
 	}
@@ -93,17 +97,17 @@ static int generate_msg(void)
 
 int main(int argc, char **argv)
 {
+	int sock;
+	struct sockaddr_in addr;
+
 	if (argc != 2)
 		usage();
 
 	cmd = argv[1];
 
-	int sock = socket(AF_INET, SOCK_STREAM, 0);
-
-	if (sock == -1)
+	if ((sock = socket(AF_INET, SOCK_STREAM, 0)) == -1)
 		err(EXIT_FAILURE, "socket()");
 
-	struct sockaddr_in addr;
 	memset(&addr, 0, sizeof(addr));
 	addr.sin_port = htons(QOTD_PORT);
 
