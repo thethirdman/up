@@ -17,7 +17,7 @@ CPPFLAGS = -DVERSION=\"${VERSION}\" -D_POSIX_C_SOURCE=2
 # uncomment this to change the renewal time (in seconds).
 #CPPFLAGS += -DPERIOD_RENEWAL=30
 
-CFLAGS += -std=c99 -pedantic -Wall -Wextra ${INCS} ${CPPFLAGS}
+CFLAGS += -std=c99 -pedantic -Wall ${INCS} ${CPPFLAGS}
 LDFLAGS += -s ${LIBS}
 
 # compiler and linker
