@@ -33,7 +33,7 @@ clean:
 
 dist: clean
 	@echo creating dist tarball
-	@mkdir -p qtd-${VERSION}
+	@mkdir -p qotd-${VERSION}
 	@cp -R LICENSE Makefile README config.def.mk qotd.1 ${SRC} qotd-${VERSION}
 	@tar -cf qotd-${VERSION}.tar qotd-${VERSION}
 	@gzip qotd-${VERSION}.tar

@@ -1,0 +1,5 @@
+ * Add udp support
+ * sanitize msg
+ * ipv6 support
+ * must demonize
+ * man page
