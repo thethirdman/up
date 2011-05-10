@@ -96,8 +96,9 @@ new_msg(void)
 
 	size_t size_read = 0;
 
+	size_t r = 0;
 	while (!feof(cmd_output) && size_read < sizeof(actual_msg) - 1) {
-		size_t r = fread(actual_msg, 1, sizeof(actual_msg) - 1 - r,
+		r = fread(actual_msg, 1, sizeof(actual_msg) - 1 - r,
 		    cmd_output);
 		if (r == 0 && ferror(cmd_output)) {
 			warn("fread()");
