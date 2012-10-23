@@ -2,7 +2,6 @@ OCAMLMAKEFILE=OCamlMakefile
 
 RESULT=cgp
 SOURCES=cgp.ml
-PACKS=core
 THREADS=true
 ANNOTATE=true
 
