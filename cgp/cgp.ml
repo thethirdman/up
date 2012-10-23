@@ -1,6 +1,6 @@
 open Unix
 
-let port = 1664
+let port = 19
 
 let string_init size f =
   let str = String.make size 'a' in

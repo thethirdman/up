@@ -6,6 +6,4 @@ cgp is an implementation of the RFC 864
 Requirements
 ------------
 
-You need ocaml with the async (by jane street) library installed on your OS
-
-
+You need an ocaml compiler, with ocamlfind
