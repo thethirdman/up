@@ -1,8 +1,13 @@
 open Unix
 
-let port = 19
+let port = 1664
 let tcp = ref false
 let size = 72
+
+let socklist = ref []
+
+let print_sock sock = try print_string ((List.assq sock !socklist)  ^ ", ") with
+  _ -> prerr_endline "socket not found"
 
 let string_init size f =
   let str = String.make size 'a' in
@@ -21,16 +26,26 @@ let incr_string str size =
 
 let char_table = (string_init size (fun i -> (Char.chr (i + 33)))) ^ "\r\n"
 
+let handle_connect sock clients =
+  let (re,_,_) = select [sock] !clients [] (-1.0) in
+  List.iter (fun s -> clients := (fst (accept s))::!clients) re;
+  !clients
+
 let tcp_speak sock =
+  let clients = ref [] in
+  let rec send_msg fd =
+    try
+      ignore (send fd char_table 0 (size + 2) [])
+    with
+      Unix_error (e,s,t) when e = ECONNRESET ->
+        close fd; clients := List.filter (fun e -> e <> fd) !clients in
   Unix.listen sock 10;
     while true do
-      let (fd,_) = accept sock in
-      try
+      ignore (handle_connect sock clients);
         while true do
-          ignore (send fd char_table 0 (size + 2) []);
+          List.iter send_msg (handle_connect sock clients);
           incr_string char_table size;
         done;
-      with Unix_error (e,_,_) when e = ECONNRESET -> close fd
     done
 
 let udp_speak sock =
@@ -43,7 +58,7 @@ let udp_speak sock =
   done
 
 let usage fail =
-  let str = 
+  let str =
   ("This is chargen: the character generator protocol daemon\n"                  ^
    "Usage :     " ^ Sys.argv.(0) ^ "    [--tcp|--udp|-h]\n"                  ^
    "Options: \n"                                                             ^
@@ -78,6 +93,7 @@ let _ =
     let sock = (socket PF_INET (if !tcp then SOCK_STREAM else SOCK_DGRAM) 0)
     and hostinfo = gethostbyname (gethostname ()) in
     let server_addr = hostinfo.Unix.h_addr_list.(0) in
+    socklist:= (sock, "sock")::!socklist;
     ignore (bind sock (ADDR_INET (server_addr, port)));
     if !tcp then
       tcp_speak sock
