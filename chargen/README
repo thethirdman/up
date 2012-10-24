@@ -1,17 +1,17 @@
-CGP -- Character Generator Protocol
+Chargen -- Character Generator Protocol
 ===================================
 
-cgp is an implementation of the RFC 864
+Chargen is an implementation of the RFC 864
 
 Requirements
 ------------
 
 You need an ocaml compiler, with ocamlfind
 
-Running cgp
------------
+Running Chargen
+---------------
 
 You can just launch the executable. By default, it will run using tcp.
 You can also specify the protocol, either '--tcp' or '--udp'
 
-        ./cgp --udp
+        ./chargen --udp
