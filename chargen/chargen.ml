@@ -38,7 +38,7 @@ let tcp_speak sock =
       ignore (send fd char_table 0 (size + 2) [])
     with
       Unix_error (e,s,t) when e = ECONNRESET ->
-        close fd; clients := List.filter (fun e -> e <> fd) !clients in
+        close fd; clients := List.filter (fun e -> e != fd) !clients in
   Unix.listen sock 10;
     while true do
       ignore (handle_connect sock clients);
