@@ -31,8 +31,7 @@ let tcp_speak sock =
           incr_string char_table size;
         done;
       with Unix_error (e,_,_) when e = ECONNRESET -> close fd
-    done;
-    close (sock)
+    done
 
 let udp_speak sock =
   let tmp = String.create 512 in
@@ -82,7 +81,8 @@ let _ =
     if !tcp then
       tcp_speak sock
     else
-      udp_speak sock
+      udp_speak sock;
+    close (sock)
 
   with Unix_error (e,str1,str2) -> print_string ((error_message e) ^ "\n" ^ str1
   ^ "\n" ^ str2 ^ "\n")
