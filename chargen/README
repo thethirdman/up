@@ -7,3 +7,11 @@ Requirements
 ------------
 
 You need an ocaml compiler, with ocamlfind
+
+Running cgp
+-----------
+
+You can just launch the executable. By default, it will run using tcp.
+You can also specify the protocol, either '--tcp' or '--udp'
+
+        ./cgp --udp

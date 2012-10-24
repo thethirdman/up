@@ -1,7 +1,7 @@
 OCAMLMAKEFILE=OCamlMakefile
 
-RESULT=cgp
-SOURCES=cgp.ml
+RESULT=chargen
+SOURCES=chargen.ml
 THREADS=true
 ANNOTATE=true
 
