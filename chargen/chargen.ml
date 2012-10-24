@@ -42,27 +42,28 @@ let udp_speak sock =
     incr_string char_table size
   done
 
-let usage () =
-  print_endline
+let usage fail =
+  let str = 
   ("This is chargen: the character generator protocol daemon\n"                  ^
    "Usage :     " ^ Sys.argv.(0) ^ "    [--tcp|--udp|-h]\n"                  ^
    "Options: \n"                                                             ^
    "    --tcp or -tcp   : Use tcp protocol (default if no option is given)\n"^
    "    --udp or -udp   : Use udp protocol\n"                                ^
    "    --help or -help : Show this help\n"                                  )
+  in if fail then prerr_endline str else print_endline str
 
 let treat_arg () =
   let len = Array.length (Sys.argv) in
   let rec aux = function
     "--udp" | "-udp" -> tcp := false
     | "--tcp" | "-tcp" -> tcp := true
-    | "-h" | "--help" | "-help" -> usage (); exit 0
-    | _ -> usage (); exit 1 in
+    | "-h" | "--help" | "-help" -> usage false; exit 0
+    | _ -> usage true; exit 1 in
   if len = 1 then tcp := true
   else if len = 2 then
     aux Sys.argv.(1)
   else
-    (usage (); exit 1)
+    (usage true; exit 1)
 
 let daemonize () =
   print_endline "\n -- Daemon Chargen started --";
@@ -84,7 +85,7 @@ let _ =
       udp_speak sock;
     close (sock)
 
-  with Unix_error (e,str1,str2) -> print_string ((error_message e) ^ "\n" ^ str1
+  with Unix_error (e,str1,str2) -> prerr_string ((error_message e) ^ "\n" ^ str1
   ^ "\n" ^ str2 ^ "\n")
-  | e -> print_string ("fail: "^  (Printexc.to_string e))
+  | e -> prerr_string ("fail: "^  (Printexc.to_string e))
 
