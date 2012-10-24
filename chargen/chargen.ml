@@ -1,6 +1,6 @@
 open Unix
 
-let port = 1664
+let port = 19
 let tcp = ref false
 let size = 72
 
